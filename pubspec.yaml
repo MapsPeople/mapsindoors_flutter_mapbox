@@ -22,13 +22,6 @@ dependencies:
   mapsindoors_mapbox_android: ^2.1.0
   mapsindoors_mapbox_ios: ^2.1.0
   mapsindoors_platform_interface: ^2.1.0
-dependency_overrides:
-  mapsindoors_mapbox_android:
-    path: ../mapsindoors_mapbox_android
-  mapsindoors_mapbox_ios:
-    path: ../mapsindoors_mapbox_ios
-  mapsindoors_platform_interface:
-    path: ../../misdkfl-platform
 
 
 dev_dependencies:
