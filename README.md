@@ -1,11 +1,10 @@
+# ReadMe
 
 A federated Flutter plugin for integrating with the native MapsIndoors SDK.
 
 | Platform     | Android | iOS   |
 | ------------ | ------- | ----- |
 | **Supports** | SDK 21+ | 13.0+ |
-
-# ReadMe
 
 ## Features
 
@@ -22,7 +21,7 @@ This plugin is based on the MapsIndoors-Mapbox V4 SDK for Android and iOS.
 Add MapsIndoors to your `pubspec.yaml`.
 
 ```yaml
-mapsindoors_mapbox: ^2.1.1
+mapsindoors_mapbox: ^2.1.3
 ```
 
 ### Android
@@ -31,9 +30,9 @@ mapsindoors_mapbox: ^2.1.1
 
 To get the underlying Mapbox map to function, you need to perform the following steps:
 
-1. Navigate to `android/app/src/main/res/value`.
-2. Create a file in this folder called `mapbox_api_key.xml`.
-3. Copy and paste the below code snippet and replace `YOUR_KEY_HERE` with your Mapbox API key.
+1. Navigate to `android/app/src/main/res/value`
+2. Create a file in this folder called `mapbox_api_key.xml`
+3. Copy and paste the below code snippet and replace `YOUR_KEY_HERE` with your Mapbox API key
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -47,18 +46,28 @@ To get the underlying Mapbox map to function, you need to perform the following 
 
 To ensure the plugin is able to resolve its MapsIndoors Gradle dependency, do the following:
 
-1. Navigate to the app's project level `build.gradle`.
-2. add `maven { url 'https://maven.mapsindoors.com/' }` to `allprojects`/`repositories` after `mavenCentral()
+1. Navigate to the app's project level `build.gradle`
+2. add the following to `allprojects`/`repositories` after `mavenCentral()`
 
 ```groovy
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://maven.mapsindoors.com/' }
+maven { url 'https://maven.mapsindoors.com/' }
+maven {
+    url 'https://api.mapbox.com/downloads/v2/releases/maven'
+    authentication {
+        basic(BasicAuthentication)
+    }
+    credentials {
+        // Do not change the username below.
+        // This should always be `mapbox` (not your username).
+        username = "mapbox"
+        // Use the secret token you stored in gradle.properties as the password
+        password = project.properties['MAPBOX_DOWNLOADS_TOKEN'] ?: ""
     }
 }
 ```
+
+3. put your Mapbox download token in your top-level `gradle.properties` file
+   * `MAPBOX_DOWNLOADS_TOKEN=YOUR_KEY_HERE` replace `YOUR_KEY_HERE` with your token
 
 ### iOS
 
