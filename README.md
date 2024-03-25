@@ -21,7 +21,7 @@ This plugin is based on the MapsIndoors-Mapbox V4 SDK for Android and iOS.
 Add MapsIndoors to your `pubspec.yaml`.
 
 ```yaml
-mapsindoors_mapbox: ^2.1.4
+mapsindoors_mapbox: ^2.1.5
 ```
 
 ### Android
