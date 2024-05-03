@@ -21,7 +21,7 @@ This plugin is based on the MapsIndoors-Mapbox V4 SDK for Android and iOS.
 Add MapsIndoors to your `pubspec.yaml`.
 
 ```yaml
-mapsindoors_mapbox: ^2.1.5
+mapsindoors_mapbox: ^2.1.6
 ```
 
 ### Android
@@ -71,10 +71,10 @@ maven {
 
 ### iOS
 
-The MapsIndoors SDK requires iOS 13, so make sure that your podfile is configured for iOS 13. Add use_frameworks! inside your app target as well.
+The MapsIndoors SDK requires iOS 14 so make sure that your podfile is configured for iOS 14. Add use_frameworks! inside your app target as well.
 
 ```
-platform :ios, '13.0
+platform :ios, '14.0'
 
 target 'MyApp' do
   use_frameworks!
