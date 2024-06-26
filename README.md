@@ -14,14 +14,14 @@ Use this plugin to:
 - Perform real-time wayfinding.
 - See location live updates.
 
-This plugin is based on the MapsIndoors-Mapbox V4 SDK for Android and iOS.
+This plugin is based on the MapsIndoors V4 SDK for Android and iOS.
 
 ## Getting Started
 
 Add MapsIndoors to your `pubspec.yaml`.
 
 ```yaml
-mapsindoors_mapbox: ^2.1.6
+mapsindoors_mapbox: ^3.0.0
 ```
 
 ### Android
