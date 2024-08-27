@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.2
+
+* Fixed issues where updating display rules would not trigger a refresh on iOS
+* Updated Mapsindoors SDKs:
+  * Android to 4.8.8
+  * iOS to 4.5.12
+
 ## 3.0.1
 
 * No changes
