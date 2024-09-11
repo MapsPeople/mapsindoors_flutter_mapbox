@@ -1,7 +1,0 @@
-dependency_overrides:
-  mapsindoors_mapbox_android:
-    path: ../mapsindoors_mapbox_android
-  mapsindoors_mapbox_ios:
-    path: ../mapsindoors_mapbox_ios
-  mapsindoors_platform_interface:
-    path: ../../misdkfl-platform
