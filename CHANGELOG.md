@@ -1,8 +1,27 @@
 # Changelog
 
+## 3.1.0
+
+### Addded
+
+* Added functionality for Android to update the map whenever a Display Rule is changed
+* Added method on MapsIndoorsWidget to disable built-in compass
+
+### Changed
+
+* Disabled Mapbox Attributions button on Android as it would crash when clicked
+* Updated Mapsindoors SDKs:
+  * Android to 4.8.9
+  * iOS to 4.5.14
+
 ## 3.0.2
 
+### Fixed
+
 * Fixed issues where updating display rules would not trigger a refresh on iOS
+
+### Changed
+
 * Updated Mapsindoors SDKs:
   * Android to 4.8.8
   * iOS to 4.5.12
