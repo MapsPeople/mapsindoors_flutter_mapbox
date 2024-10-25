@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.1.2
+
+### Fixed
+
+* Fixed issue where camera events would not be propagated to the Flutter layer on iOS
+* Fixed behavior where iOS would throw an error when `getLocationById` could not find a location, it now returns null like on Android
+* Fixed `setCollisionHandling` on `MPSolutionConfig` causing a crash
+* Fixed `moveCamera`/`AnimateCamera` from a `MPCameraPosition` would not work on iOS
+
+### Changed
+
+* Updated Mapsindoors SDKs:
+  * Android to 4.8.11
+
 ## 3.1.1
 
 ### Fixed
