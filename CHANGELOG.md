@@ -1,5 +1,22 @@
 # Changelog
 
+## 4.1.0
+
+### Added
+
+* Added the ability to set a custom Mapbox style using the new `mapStyleUri` on `MapsIndoorsWidget`
+
+### Fixed
+
+* Fixed issue where setting `mapsIndoorsTransitionLevel` on `MapsIndoorsWidget` had no effect
+* Fixed error when parsing `MPRoute` objects
+
+### Changed
+
+* Updated Mapsindoors SDKs:
+  * iOS to 4.8.3
+
+
 ## 4.0.2
 
 ### Changed
