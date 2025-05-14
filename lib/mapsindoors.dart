@@ -89,7 +89,8 @@ export 'package:mapsindoors_platform_interface/platform_library.dart'
         MPIconPlacement,
         MPBadgePosition,
         MPRouteStopIconConfig,
-        MPRouteStopIconConfigInterface;
+        MPRouteStopIconConfigInterface,
+        MPLabelPosition;
 
 part 'core/mapsindoors_widget.dart';
 part 'core/mp_directions_service.dart';

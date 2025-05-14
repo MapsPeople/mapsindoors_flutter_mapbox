@@ -1,5 +1,35 @@
 # Changelog
 
+## 4.2.0
+
+### Added
+
+* Support for positioning labels in more places by having `labelStylePosition` added to DisplayRules. With this attribute it is possible to decide where the label is placed in relation to the icon. Possible values are defined in `MPLabelPosition` as `right`, `left`, `top` and `bottom`. The label positioning can now be set in the MapsIndoors CMS.
+
+### Added
+
+* LabelPositioning on DisplayRules
+* Elevated 2D Models
+  * 2D Models that are placed on Extrusions, will now be raised to be placed on top
+* Clip Layer
+  * Extruded buildings and Trees from the MapBox standard style can now be removed, when inside venue's geometry.
+  * Does not remove landmarks consistently, will be solved with a future version of Mapbox
+  * Requires a module enabled. Contact MapsPeople to have it enabled
+
+### Fixed
+
+* Reenabled Mapbox Attribution as it no longer causes a crash when tapped (Android)
+* Fixed issue causing compass to persist even when disabled (Android)
+* getLocationsByExternalIds now can return more than a single Location in the list (as would be expected) (iOS)
+* Fixed issue where some routes would be incorrect if the route was calculated while offline
+* Fixed issue where moving beyond the venue could cause a crash due to the floor selector
+
+### Changed
+
+* Updated Mapsindoors SDKs:
+  * Android to 4.12.0
+  * iOS to 4.11.0
+
 ## 4.1.6
 
 ### Fixed
