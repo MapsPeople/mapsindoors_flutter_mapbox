@@ -2,7 +2,7 @@ part of '../mapsindoors.dart';
 
 /// A [UniqueWidget] that contains the map used by MapsIndoors
 class MapsIndoorsWidget extends UniqueWidget {
-  final MPFloorSelectorInterface? floorSelector;
+  final MPFloorSelectorInterface? floorSelectorController;
   final MPMapLabelFont? mapLabelFont;
   final int? textSize;
   final bool? showFloorSelector;
@@ -37,7 +37,7 @@ class MapsIndoorsWidget extends UniqueWidget {
     this.buildingSelectionMode,
     this.floorSelectionMode,
     this.mapsIndoorsTransitionLevel,
-    this.floorSelector,
+    this.floorSelectorController,
     this.floorSelectorAlignment,
     this.readyListener,
     this.initialCameraPosition,
@@ -396,14 +396,14 @@ class _MapsIndoorsState extends State<MapsIndoorsWidget> {
   @override
   void initState() {
     super.initState();
-    if (widget.floorSelector == null) {
+    if (widget.floorSelectorController == null) {
       // Create a default floor selector controller and widget
       final controller = MPDefaultFloorSelectorController();
       _floorSelector = controller;
       _floorSelectorWidget = MPDefaultFloorSelector(controller: controller);
     } else {
-      _floorSelector = widget.floorSelector;
-      _floorSelectorWidget = widget.floorSelector!.getWidget();
+      _floorSelector = widget.floorSelectorController;
+      _floorSelectorWidget = widget.floorSelectorController!.getWidget();
     }
   }
 

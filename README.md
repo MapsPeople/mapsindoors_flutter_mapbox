@@ -148,7 +148,7 @@ class MapWidgetState extends State<MapWidget> {
                 // Add the MapsIndoors Widget to your Widget, it will automatically fill the container it is placed in.
                 child: _mapController = MapsIndoorsWidget(
                     // pass the floor selector controller
-                    floorSelector: _floorSelectorController,
+                    floorSelectorController: _floorSelectorController,
                     // set an optional starting location for the camera, this starts the camera above Los Angeles
                     initialCameraPosition: MPCameraPosition(zoom: 7, MPPoint.withCoordinates(longitude: -118.0165, latitude: 33.9457))
                     readyListener: _mapControlReadyListener,
