@@ -3,11 +3,6 @@ part of '../mapsindoors.dart';
 class MPDefaultFloorSelector extends StatefulWidget with MPFloorSelector {
   const MPDefaultFloorSelector({super.key});
 
-  static _MPDefaultFloorSelectorState? _currentState;
-  static List<MPFloor>? _pendingFloors;
-  static OnFloorSelectionChangedListener? _pendingListener;
-  static int? _pendingUserPositionFloor;
-
   @override
   Widget? getWidget() => this;
 
@@ -16,49 +11,54 @@ class MPDefaultFloorSelector extends StatefulWidget with MPFloorSelector {
 
   @override
   set floors(List<MPFloor>? value) {
-    if (_currentState == null) {
-      _pendingFloors = value;
-    } else {
-      _currentState!.floors = value;
-    }
+    // Find the current state using the widget's key
+    final state = _findCurrentState();
+    state?.floors = value;
   }
 
   @override
   set onFloorSelectionChangedListener(OnFloorSelectionChangedListener value) {
-    if (_currentState == null) {
-      _pendingListener = value;
-    } else {
-      _currentState!.onFloorSelectionChangedListener = value;
-    }
+    final state = _findCurrentState();
+    state?.onFloorSelectionChangedListener = value;
   }
 
   @override
   void setSelectedFloor(MPFloor floor) {
-    _currentState?.setSelectedFloor(floor);
+    final state = _findCurrentState();
+    state?.setSelectedFloor(floor);
   }
 
   @override
   void setSelectedFloorByFloorIndex(int floorIndex) {
-    _currentState?.setSelectedFloorByFloorIndex(floorIndex);
+    final state = _findCurrentState();
+    state?.setSelectedFloorByFloorIndex(floorIndex);
   }
 
   @override
   set userPositionFloor(int value) {
-    if (_currentState == null) {
-      _pendingUserPositionFloor = value;
-    } else {
-      _currentState!.userPositionFloor = value;
-    }
+    final state = _findCurrentState();
+    state?.userPositionFloor = value;
   }
 
   @override
   void show(bool show) {
-    _currentState?.show(show);
+    final state = _findCurrentState();
+    state?.show(show);
   }
 
   @override
   void zoomLevelChanged(num newZoomLevel) {
-    _currentState?.zoomLevelChanged(newZoomLevel);
+    final state = _findCurrentState();
+    state?.zoomLevelChanged(newZoomLevel);
+  }
+
+  /// Safely finds the current state instance via the widget's [GlobalKey].
+  _MPDefaultFloorSelectorState? _findCurrentState() {
+    final state = (key as GlobalKey?)?.currentState;
+    if (state is _MPDefaultFloorSelectorState) {
+      return state;
+    }
+    return null;
   }
 
   @override
@@ -77,29 +77,10 @@ class _MPDefaultFloorSelectorState extends State<MPDefaultFloorSelector>
   @override
   void initState() {
     super.initState();
-    MPDefaultFloorSelector._currentState = this;
-
-    // Handle any pending values
-    if (MPDefaultFloorSelector._pendingFloors != null) {
-      floors = MPDefaultFloorSelector._pendingFloors;
-      MPDefaultFloorSelector._pendingFloors = null;
-    }
-    if (MPDefaultFloorSelector._pendingListener != null) {
-      onFloorSelectionChangedListener =
-          MPDefaultFloorSelector._pendingListener!;
-      MPDefaultFloorSelector._pendingListener = null;
-    }
-    if (MPDefaultFloorSelector._pendingUserPositionFloor != null) {
-      userPositionFloor = MPDefaultFloorSelector._pendingUserPositionFloor!;
-      MPDefaultFloorSelector._pendingUserPositionFloor = null;
-    }
   }
 
   @override
   void dispose() {
-    if (MPDefaultFloorSelector._currentState == this) {
-      MPDefaultFloorSelector._currentState = null;
-    }
     super.dispose();
   }
 

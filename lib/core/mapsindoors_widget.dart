@@ -417,8 +417,7 @@ class _MapsIndoorsState extends State<MapsIndoorsWidget> {
           jsonEncode(widget.initialCameraPosition?.toJson()),
     };
 
-    final floorSelector =
-        widget.floorSelector ?? const MPDefaultFloorSelector();
+    final floorSelector = widget.floorSelector ?? MPDefaultFloorSelector();
     if (Platform.isAndroid) {
       MapcontrolPlatform.instance.setFloorSelector(floorSelector, true);
     } else if (Platform.isIOS) {
