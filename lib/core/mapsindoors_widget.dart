@@ -17,6 +17,7 @@ class MapsIndoorsWidget extends UniqueWidget {
   final OnMapReadyListener? readyListener;
   final MPCameraPosition? initialCameraPosition;
   final String? mapStyleUri;
+  final List<MPFeatureType>? hiddenFeatures;
 
   /// Build the widget, MapsIndoors currently supports the following platforms:
   /// * Android
@@ -43,6 +44,7 @@ class MapsIndoorsWidget extends UniqueWidget {
     this.initialCameraPosition,
     this.useDefaultMapsIndoorsStyle = true,
     this.mapStyleUri,
+    this.hiddenFeatures,
   }) : super(key: const GlobalObjectKey(MapsIndoorsWidget)) {
     if (readyListener != null) {
       MapcontrolPlatform.instance.setOnMapControlReadyListener(readyListener!);
@@ -433,6 +435,7 @@ class _MapsIndoorsState extends State<MapsIndoorsWidget> {
           _floorSelector?.isAutoFloorChangeEnabled == true,
       "initialCameraPosition":
           jsonEncode(widget.initialCameraPosition?.toJson()),
+      "hiddenFeatures": widget.hiddenFeatures?.map((e) => e.toJson()).toList(),
     };
 
     if (Platform.isAndroid) {

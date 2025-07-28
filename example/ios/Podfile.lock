@@ -2,34 +2,28 @@ PODS:
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
-  - MapboxCommon (23.8.3)
-  - MapboxCoreMaps (10.16.1):
-    - MapboxCommon (~> 23.8)
-  - MapboxDirections (2.11.1):
-    - Polyline (~> 5.0)
-    - Turf (~> 2.6.1)
-  - MapboxMaps (10.16.1):
-    - MapboxCommon (= 23.8.3)
-    - MapboxCoreMaps (= 10.16.1)
-    - MapboxMobileEvents (= 1.0.10)
-    - Turf (~> 2.0)
-  - MapboxMobileEvents (1.0.10)
-  - MapsIndoors (4.2.14)
-  - mapsindoors_mapbox_ios (4.2.14):
+  - MapboxCommon (24.13.3):
+    - Turf (= 4.0.0)
+  - MapboxCoreMaps (11.13.3):
+    - MapboxCommon (= 24.13.3)
+  - MapboxMaps (11.13.3):
+    - MapboxCommon (= 24.13.3)
+    - MapboxCoreMaps (= 11.13.3)
+    - Turf (= 4.0.0)
+  - MapsIndoors (4.12.3)
+  - mapsindoors_mapbox_ios (4.2.5):
     - Flutter
-    - MapsIndoorsCodable (= 4.2.14)
-    - MapsIndoorsMapbox (= 4.2.14)
-  - MapsIndoorsCodable (4.2.14):
-    - MapsIndoors (= 4.2.14)
-    - MapsIndoorsCore (= 4.2.14)
-  - MapsIndoorsCore (4.2.14):
-    - MapsIndoors (= 4.2.14)
-  - MapsIndoorsMapbox (4.2.14):
-    - MapboxDirections (= 2.11.1)
-    - MapboxMaps (= 10.16.1)
-    - MapsIndoorsCore (= 4.2.14)
-  - Polyline (5.1.0)
-  - Turf (2.6.1)
+    - MapsIndoorsCodable (= 4.12.3)
+    - MapsIndoorsMapbox11 (= 4.12.3)
+  - MapsIndoorsCodable (4.12.3):
+    - MapsIndoors (= 4.12.3)
+    - MapsIndoorsCore (= 4.12.3)
+  - MapsIndoorsCore (4.12.3):
+    - MapsIndoors (= 4.12.3)
+  - MapsIndoorsMapbox11 (4.12.3):
+    - MapboxMaps (= 11.13.3)
+    - MapsIndoorsCore (= 4.12.3)
+  - Turf (4.0.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -40,14 +34,11 @@ SPEC REPOS:
   trunk:
     - MapboxCommon
     - MapboxCoreMaps
-    - MapboxDirections
     - MapboxMaps
-    - MapboxMobileEvents
     - MapsIndoors
     - MapsIndoorsCodable
     - MapsIndoorsCore
-    - MapsIndoorsMapbox
-    - Polyline
+    - MapsIndoorsMapbox11
     - Turf
 
 EXTERNAL SOURCES:
@@ -59,21 +50,18 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/mapsindoors_mapbox_ios/ios"
 
 SPEC CHECKSUMS:
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  integration_test: 13825b8a9334a850581300559b8839134b124670
-  MapboxCommon: b2c348867dfed7d7a23545e6c2024d712bfda10f
-  MapboxCoreMaps: c66f482b5ea983cf873122853c4ee94c159bec43
-  MapboxDirections: 31d61b8369d5dde6f6828f72905ab9a7e054cd2c
-  MapboxMaps: fdbe05e3899abd24f31a7f91789586e44e57f7fc
-  MapboxMobileEvents: de50b3a4de180dd129c326e09cd12c8adaaa46d6
-  MapsIndoors: 8afc1d59eaeb8a38d736b92055fdfd9f446df73c
-  mapsindoors_mapbox_ios: b55467eb8faac68ea0691797c5b8233d46643e15
-  MapsIndoorsCodable: efe85c02404326fa79c54249becbc6c1ffc0f6b1
-  MapsIndoorsCore: 953d05c434d759e4a64ebdf00982612b1fe38596
-  MapsIndoorsMapbox: 38de40c3f38e8afef5e1b39dd62a37aa316df827
-  Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
-  Turf: 469ce2c3d22e5e8e4818d5a3b254699a5c89efa4
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
+  MapboxCommon: 2bcc5f4477943750ecd5ab3a46e9375761deb4df
+  MapboxCoreMaps: 61c6137cf359898c7d4e20cd1cede6c8e814b348
+  MapboxMaps: 597037989a759d27d7d88240822457351bce2197
+  MapsIndoors: 715b28512a967e1d7eaf31427cf780f1fc454515
+  mapsindoors_mapbox_ios: d11b2f73607d584e6673b2eabbcbb1366058460d
+  MapsIndoorsCodable: 9b5cf7bbbe2027ac11b96e8c01d8283e14bc1d48
+  MapsIndoorsCore: 19ad50651b8cd175889845273d0b3eebd974738c
+  MapsIndoorsMapbox11: 2b6509df2f1b9a2c7309c417abb8144192ebda7d
+  Turf: c9eb11a65d96af58cac523460fd40fec5061b081
 
-PODFILE CHECKSUM: 9b42c202d73943ca73c5a018b510dba461145e5e
+PODFILE CHECKSUM: a2c3ee0697b35eaba769f92f9356df15ee2bcb61
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.16.2
