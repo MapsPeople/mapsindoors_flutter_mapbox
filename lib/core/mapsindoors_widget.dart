@@ -2,7 +2,7 @@ part of '../mapsindoors.dart';
 
 /// A [UniqueWidget] that contains the map used by MapsIndoors
 class MapsIndoorsWidget extends UniqueWidget {
-  final MPFloorSelector? floorSelector;
+  final MPFloorSelectorInterface? floorSelectorController;
   final MPMapLabelFont? mapLabelFont;
   final int? textSize;
   final bool? showFloorSelector;
@@ -23,7 +23,7 @@ class MapsIndoorsWidget extends UniqueWidget {
   /// * Android
   /// * iOS
   ///
-  /// Has optional [MPFloorSelector] widget. Package includes a [MPDefaultFloorSelector].
+  /// Has optional [MPFloorSelectorInterface]. Package includes a [MPDefaultFloorSelector] and [MPDefaultFloorSelectorController].
   ///
   /// [mapStyleUri] When using Mapbox this can be set to use a custom Mapbox style. this setting is ignored if [useDefaultMapsIndoorsStyle] is not disabled.
   ///
@@ -38,7 +38,7 @@ class MapsIndoorsWidget extends UniqueWidget {
     this.buildingSelectionMode,
     this.floorSelectionMode,
     this.mapsIndoorsTransitionLevel,
-    this.floorSelector,
+    this.floorSelectorController,
     this.floorSelectorAlignment,
     this.readyListener,
     this.initialCameraPosition,
@@ -391,6 +391,24 @@ class MapsIndoorsWidget extends UniqueWidget {
 }
 
 class _MapsIndoorsState extends State<MapsIndoorsWidget> {
+  // Create a default floor selector controller if none is provided
+  MPFloorSelectorInterface? _floorSelector;
+  Widget? _floorSelectorWidget;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.floorSelectorController == null) {
+      // Create a default floor selector controller and widget
+      final controller = MPDefaultFloorSelectorController();
+      _floorSelector = controller;
+      _floorSelectorWidget = MPDefaultFloorSelector(controller: controller);
+    } else {
+      _floorSelector = widget.floorSelectorController;
+      _floorSelectorWidget = widget.floorSelectorController!.getWidget();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // This is used in the platform side to register the view.
@@ -414,17 +432,16 @@ class _MapsIndoorsState extends State<MapsIndoorsWidget> {
         "mapStyleUri": widget.mapStyleUri,
       }),
       "floorSelectorAutoFloorChange":
-          widget.floorSelector?.isAutoFloorChangeEnabled == true,
+          _floorSelector?.isAutoFloorChangeEnabled == true,
       "initialCameraPosition":
           jsonEncode(widget.initialCameraPosition?.toJson()),
       "hiddenFeatures": widget.hiddenFeatures?.map((e) => e.toJson()).toList(),
     };
 
-    final floorSelector = widget.floorSelector ?? MPDefaultFloorSelector();
     if (Platform.isAndroid) {
-      MapcontrolPlatform.instance.setFloorSelector(floorSelector, true);
+      MapcontrolPlatform.instance.setFloorSelector(_floorSelector!, true);
     } else if (Platform.isIOS) {
-      MapcontrolPlatform.instance.setFloorSelector(floorSelector, false);
+      MapcontrolPlatform.instance.setFloorSelector(_floorSelector!, false);
     }
     final StatefulWidget miView;
 
@@ -469,10 +486,11 @@ class _MapsIndoorsState extends State<MapsIndoorsWidget> {
       flex: 1,
       child: Stack(children: [
         miView,
-        Align(
-          alignment: widget.floorSelectorAlignment ?? Alignment.centerRight,
-          child: floorSelector,
-        )
+        if (_floorSelectorWidget != null)
+          Align(
+            alignment: widget.floorSelectorAlignment ?? Alignment.centerRight,
+            child: _floorSelectorWidget!,
+          )
       ]),
     );
   }
