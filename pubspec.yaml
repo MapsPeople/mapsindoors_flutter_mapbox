@@ -1,6 +1,6 @@
 name: mapsindoors_mapbox
 description: A MapsIndoors flutter plugin using the Mapbox platform for Android and iOS app usage.
-version: 4.4.0
+version: 4.4.1
 repository: https://github.com/MapsPeople/mapsindoors_flutter_mapbox
 homepage: https://www.mapsindoors.com/
 
@@ -19,9 +19,9 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  mapsindoors_mapbox_android: ^4.4.0
-  mapsindoors_mapbox_ios: ^4.4.0
-  mapsindoors_platform_interface: ^4.4.0
+  mapsindoors_mapbox_android: ^4.4.1
+  mapsindoors_mapbox_ios: ^4.4.1
+  mapsindoors_platform_interface: ^4.4.1
 
 
 dev_dependencies:
