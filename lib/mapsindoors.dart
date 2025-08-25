@@ -96,6 +96,5 @@ part 'core/mapsindoors_widget.dart';
 part 'core/mp_directions_service.dart';
 part 'core/mp_directions_renderer.dart';
 part 'core/mp_default_floor_selector.dart';
-part 'core/mp_floor_selector.dart';
 part 'core/mp_map_label_font.dart';
 part 'core/mapsindoors.dart';
