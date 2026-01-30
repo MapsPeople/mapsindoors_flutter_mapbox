@@ -1,3 +1,4 @@
+/// Starting point for all MapsIndoors functionality
 library mapsindoors;
 
 import 'dart:async';
