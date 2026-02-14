@@ -1,59 +1,111 @@
 part of '../mapsindoors.dart';
 
-class MPDefaultFloorSelector extends StatefulWidget with MPFloorSelector {
-  MPDefaultFloorSelector({super.key});
-  final _Forwarder _callForwarder = _Forwarder();
+/// Controller that provides the MPFloorSelectorInterface to the platform while delegating to the state
+class MPDefaultFloorSelectorController implements MPFloorSelectorInterface {
+  _MPDefaultFloorSelectorState? _state;
+
+  // Hold values until state is attached
+  List<MPFloor>? _pendingFloors;
+  OnFloorSelectionChangedListener? _pendingListener;
+  int? _pendingUserPositionFloor;
+  bool _pendingShow = true;
+
+  void _attachState(_MPDefaultFloorSelectorState state) {
+    _state = state;
+
+    // Apply any pending operations
+    if (_pendingFloors != null) {
+      state.floors = _pendingFloors;
+      _pendingFloors = null;
+    }
+    if (_pendingListener != null) {
+      state.onFloorSelectionChangedListener = _pendingListener!;
+      _pendingListener = null;
+    }
+    if (_pendingUserPositionFloor != null) {
+      state.userPositionFloor = _pendingUserPositionFloor!;
+      _pendingUserPositionFloor = null;
+    }
+    state.show(_pendingShow);
+  }
+
+  void _detachState() {
+    _state = null;
+  }
 
   @override
-  Widget? getWidget() => this;
+  Widget? getWidget() => _state?.widget;
+
   @override
   bool get isAutoFloorChangeEnabled => true;
+
   @override
-  set floors(List<MPFloor>? floors) => _callForwarder.setFloors?.call(floors);
-  @override
-  set onFloorSelectionChangedListener(
-      OnFloorSelectionChangedListener listener) {
-    if (_callForwarder.setOnFloorSelectionChangedListener != null) {
-      _callForwarder.setOnFloorSelectionChangedListener?.call(listener);
+  set floors(List<MPFloor>? value) {
+    if (_state != null) {
+      _state!.floors = value;
     } else {
-      _callForwarder.listener = listener;
+      _pendingFloors = value;
     }
   }
 
   @override
-  void setSelectedFloor(MPFloor floor) =>
-      _callForwarder.setSelectedFloor?.call(floor);
-  @override
-  void setSelectedFloorByFloorIndex(int floorIndex) =>
-      _callForwarder.setSelectedFloorByFloorIndex?.call(floorIndex);
-  @override
-  set userPositionFloor(int floorIndex) =>
-      _callForwarder.setUserPositionFloor?.call(floorIndex);
-  @override
-  void show(bool show) => _callForwarder.show?.call(show);
-  @override
-  void zoomLevelChanged(num newZoomLevel) =>
-      _callForwarder.zoomLevelChanged?.call(newZoomLevel);
+  set onFloorSelectionChangedListener(OnFloorSelectionChangedListener value) {
+    if (_state != null) {
+      _state!.onFloorSelectionChangedListener = value;
+    } else {
+      _pendingListener = value;
+    }
+  }
 
   @override
-  FloorSelectorState createState() => FloorSelectorState();
+  void setSelectedFloor(MPFloor floor) {
+    _state?.setSelectedFloor(floor);
+  }
+
+  @override
+  void setSelectedFloorByFloorIndex(int floorIndex) {
+    _state?.setSelectedFloorByFloorIndex(floorIndex);
+  }
+
+  @override
+  set userPositionFloor(int value) {
+    if (_state != null) {
+      _state!.userPositionFloor = value;
+    } else {
+      _pendingUserPositionFloor = value;
+    }
+  }
+
+  @override
+  void show(bool show) {
+    if (_state != null) {
+      _state!.show(show);
+    } else {
+      _pendingShow = show;
+    }
+  }
+
+  @override
+  void zoomLevelChanged(num newZoomLevel) {
+    _state?.zoomLevelChanged(newZoomLevel);
+  }
 }
 
-class _Forwarder {
-  OnFloorSelectionChangedListener? listener;
-  Function(List<MPFloor>? floors)? setFloors;
-  Function(OnFloorSelectionChangedListener listener)?
-      setOnFloorSelectionChangedListener;
-  Function(MPFloor floor)? setSelectedFloor;
-  Function(int floorIndex)? setSelectedFloorByFloorIndex;
-  Function(int floorIndex)? setUserPositionFloor;
-  Function(bool show)? show;
-  Function(num newZoomLevel)? zoomLevelChanged;
+class MPDefaultFloorSelector extends StatefulWidget {
+  const MPDefaultFloorSelector({
+    super.key,
+    required this.controller,
+  });
+
+  final MPDefaultFloorSelectorController controller;
+
+  @override
+  State<MPDefaultFloorSelector> createState() => _MPDefaultFloorSelectorState();
 }
 
-class FloorSelectorState extends State<MPDefaultFloorSelector>
+class _MPDefaultFloorSelectorState extends State<MPDefaultFloorSelector>
     implements MPFloorSelectorInterface {
-  final List<MPFloor> _floors = List.empty(growable: true);
+  final List<MPFloor> _floors = <MPFloor>[];
   OnFloorSelectionChangedListener? _listener;
   bool _visible = true;
   int _userPositionFloor = -1;
@@ -63,51 +115,36 @@ class FloorSelectorState extends State<MPDefaultFloorSelector>
   @override
   void initState() {
     super.initState();
-    widget._callForwarder.setFloors = (floors) => this.floors = floors;
-    widget._callForwarder.setOnFloorSelectionChangedListener =
-        (listener) => onFloorSelectionChangedListener = listener;
-    widget._callForwarder.setSelectedFloor = (floor) => setSelectedFloor(floor);
-    widget._callForwarder.setSelectedFloorByFloorIndex =
-        (floorIndex) => setSelectedFloorByFloorIndex(floorIndex);
-    widget._callForwarder.setUserPositionFloor =
-        (floorIndex) => userPositionFloor = floorIndex;
-    widget._callForwarder.show = (show) => this.show(show);
-    widget._callForwarder.zoomLevelChanged =
-        (newZoomLevel) => zoomLevelChanged(newZoomLevel);
-    if (widget._callForwarder.listener != null) {
-      onFloorSelectionChangedListener = widget._callForwarder.listener!;
-    }
+    widget.controller._attachState(this);
   }
 
   @override
-  Widget? getWidget() {
-    return null;
+  void dispose() {
+    widget.controller._detachState();
+    super.dispose();
   }
 
   @override
-  bool get isAutoFloorChangeEnabled {
-    return true;
-  }
+  Widget? getWidget() => widget;
+
+  @override
+  bool get isAutoFloorChangeEnabled => true;
 
   @override
   set floors(List<MPFloor>? floors) {
-    if (floors == null) {
-      return;
-    }
-    List<MPFloor> list = List.from(floors);
-    list.sort();
+    if (floors == null) return;
+
+    final List<MPFloor> sortedFloors = List<MPFloor>.from(floors)..sort();
     setState(() {
       _floors.clear();
-      _floors.addAll(list.reversed);
+      _floors.addAll(sortedFloors.reversed);
     });
   }
 
   @override
   set onFloorSelectionChangedListener(
       OnFloorSelectionChangedListener listener) {
-    setState(() {
-      _listener = listener;
-    });
+    _listener = listener;
   }
 
   @override
@@ -120,9 +157,7 @@ class FloorSelectorState extends State<MPDefaultFloorSelector>
 
   @override
   void setSelectedFloorByFloorIndex(int floorIndex) {
-    if (_floors.isEmpty) {
-      return;
-    }
+    if (_floors.isEmpty) return;
 
     for (final floor in _floors) {
       if (floor.floorIndex == floorIndex) {
@@ -149,36 +184,43 @@ class FloorSelectorState extends State<MPDefaultFloorSelector>
   }
 
   @override
-  void zoomLevelChanged(num newZoomLevel) =>
-      show(newZoomLevel >= showOnZoomLevel);
+  void zoomLevelChanged(num newZoomLevel) {
+    show(newZoomLevel >= showOnZoomLevel);
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (_visible && _floors.isNotEmpty) {
-      return SizedBox(
-        width: 50,
-        height: 400,
-        child: ListView.builder(
-            itemCount: _floors.length,
-            itemBuilder: (context, index) {
-              return ElevatedButton(
-                onPressed: () => setSelectedFloor(_floors[index]),
-                style: (_floors[index] == _selectedFloor)
-                    ? _buttonStyleWithColor(Colors.green)
-                    : (_userPositionFloor == _floors[index].floorIndex)
-                        ? _buttonStyleWithColor(Colors.amber)
-                        : null,
-                child: Text(_floors[index].displayName),
-              );
-            }),
-      );
-    } else {
+    if (!_visible || _floors.isEmpty) {
       return const SizedBox.shrink();
     }
+
+    return SizedBox(
+      width: 50,
+      height: 400,
+      child: ListView.builder(
+        itemCount: _floors.length,
+        itemBuilder: (context, index) {
+          final floor = _floors[index];
+          final isSelected = floor == _selectedFloor;
+          final isUserPositionFloor = _userPositionFloor == floor.floorIndex;
+
+          return ElevatedButton(
+            onPressed: () => setSelectedFloor(floor),
+            style: isSelected
+                ? _buttonStyleWithColor(Colors.green)
+                : isUserPositionFloor
+                    ? _buttonStyleWithColor(Colors.amber)
+                    : null,
+            child: Text(floor.displayName),
+          );
+        },
+      ),
+    );
   }
 }
 
 ButtonStyle _buttonStyleWithColor(Color color) {
   return ButtonStyle(
-      backgroundColor: WidgetStateProperty.resolveWith((states) => color));
+    backgroundColor: WidgetStateProperty.resolveWith((states) => color),
+  );
 }
