@@ -100,7 +100,7 @@ This section has examples of code for the following tasks:
 
 This snippet shows how to set up `MapsIndoors` in a Flutter application. First, the `MapsIndoorsWidget` is added to the application's build tree.
 
-Optionally we can add a `MPFloorSelector` to the map. Here we use `MPDefaultFloorSelector` as it is provided with the MapsIndoors package. The selector must be added both to the build tree as well as to `MapControl` in order to function correctly.
+Optionally we can add a floor selector to the map. Here we use `MPDefaultFloorSelector` with `MPDefaultFloorSelectorController` as provided with the MapsIndoors package. The controller is passed to `MapControl` and the widget is added to the build tree.
 
 Once `initState()` has been called, `MapsIndoors` begins initialization, and once that is done successfully, `MapControl` begins initialization.
 
@@ -136,8 +136,8 @@ class MapWidget extends StatefulWidget {
 }
 
 class MapWidgetState extends State<MapWidget> {
-    // Let's build a floor selector widget here, we need to add this to MapControl later.
-    final _floorSelectorWidget = MPDefaultFloorSelector();
+    // Create a floor selector controller
+    final _floorSelectorController = MPDefaultFloorSelectorController();
     // MapControl will be initialized after MapsIndoors.
     late final MapsIndoorsWidget _mapController;
 ​
@@ -147,8 +147,8 @@ class MapWidgetState extends State<MapWidget> {
             body: Container(
                 // Add the MapsIndoors Widget to your Widget, it will automatically fill the container it is placed in.
                 child: _mapController = MapsIndoorsWidget(
-                    // build with the default floor selector, this is optional.
-                    floorSelector: _floorSelectorWidget,
+                    // pass the floor selector controller
+                    floorSelectorController: _floorSelectorController,
                     // set an optional starting location for the camera, this starts the camera above Los Angeles
                     initialCameraPosition: MPCameraPosition(zoom: 7, MPPoint.withCoordinates(longitude: -118.0165, latitude: 33.9457))
                     readyListener: _mapControlReadyListener,
