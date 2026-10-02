@@ -1,5 +1,39 @@
 # Changelog
 
+## 4.8.0
+
+### Changed
+
+* The minimum iOS version is now 16.0, and building for iOS requires Xcode 26. Set `platform :ios, '16.0'` in your `Podfile` and raise your app's iOS deployment target to match.
+* Updated Mapsindoors SDKs:
+  * Android to [4.22.0](https://docs.mapsindoors.com/other/changelog/android-sdk/v4#id-4.22.0-2026-09-17)
+  * iOS to [4.21.0](https://docs.mapsindoors.com/other/changelog/ios-sdk/v4#id-4.21.0-2026-09-21)
+* On iOS, the MapsIndoors SDK now depends on Google Maps SDK 10.15.0 and Mapbox Maps SDK 11.25.0.
+* On iOS, `setAnimatedPolyline` no longer has any effect. It ignored `animated` and `repeating` there, and read `durationMs` as seconds. Use `setOptions` instead, which works on both platforms.
+* MapsIndoors Insights now attributes sessions from iOS apps to this plugin and its version, as it already did on Android.
+
+### Added
+
+* `MPDirectionsRenderer.setOptions`, `getOptions` and `clearOptions`, with `MPDirectionsRendererOptions`, `MPStrokeStyle` and `MPRouteAnimationType`, to change the style and animation of the rendered route at runtime. Properties left unset keep the wayfinding style configured in the MapsIndoors CMS. On Google Maps for iOS, `MPStrokeStyle.dashed` is drawn solid.
+* Offline caching of Mapbox base-map tiles, so the map underneath MapsIndoors still renders without a network: `enableBaseMapCaching`, `synchronizeBaseMapTiles` and `isBaseMapCachingSupported`, with `MPMapboxStyleSource`, `MPDataSetCachingScope` and `OnBaseMapCacheProgressListener`. The Google Maps packages report caching as unsupported.
+* `MPDirectionsRenderer.finishGuidance`, which reports to MapsIndoors Insights that the user finished following a route.
+* `setMapsIndoorsLanguage` supports Simplified and Traditional Chinese (`zh-Hans`, `zh-Hant`) on solutions that provide them, and resolves `zh-CN` and `zh-TW` to them.
+
+### Fixed
+
+* On iOS, the app no longer crashes when `getMapStyles` or `MapsIndoorsWidget.setHighlight` is called, or a display rule is changed, while a map is shown.
+* On iOS, `selectVenue`, `selectBuilding`, `selectLocation`, `selectLocationById` and `setHighlight` on `MapsIndoorsWidget` now complete once the change has been applied, as on Android, so it can be read back as soon as they return. They used to complete before it had started.
+* On iOS, the leg-selected listener now runs before `nextLeg`, `previousLeg` and `selectLegIndex` complete, as on Android, instead of shortly afterwards.
+* On Android, the first MapsIndoors Insights session after an app start was attributed to the Android SDK rather than to this plugin.
+* The colour getters on `MPDisplayRule` (`getPolygonFillColor`, `getPolygonStrokeColor`, `getExtrusionColor`, `getWallColor`, `getBadgeFillColor`, `getBadgeStrokeColor`, `getLabelStyleHaloColor` and `getLabelStyleTextColor`) no longer return a fully transparent colour. Both platforms send these as six-digit `#RRGGBB` strings, which were decoded with an alpha of 0; they are now opaque. An app that compensated with `withAlpha(255)` or `withOpacity(1.0)` can drop that, but does not have to.
+* `MPGeometry.contains`, `MPVenue.contains` and `MPBuilding.contains`, and `area` on `MPPolygon` and `MPMultiPolygon`, now return results. On Android they always failed, and on iOS `contains` always failed and `area` returned null. A point inside a polygon's hole counts as outside on both platforms. Android's `area` can read up to about 1% higher than iOS's, because the two SDKs calculate it differently.
+* `getSquaredDistanceToClosestEdge` on `MPPolygon` and `MPMultiPolygon` now returns a distance on both platforms, where it always failed before. It returns -1 when the point is outside the geometry's bounding box.
+* On Android, a method call the native side does not implement, which can happen when the plugin's packages resolve to different versions, now fails with a `MissingPluginException` instead of never completing.
+
+### Deprecated
+
+* `MPDirectionsRenderer.setPolyLineColors` and `setAnimatedPolyline`. Use `setOptions` instead.
+
 ## 4.7.3
 
 ### Changed

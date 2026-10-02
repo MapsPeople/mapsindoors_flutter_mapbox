@@ -91,7 +91,13 @@ export 'package:mapsindoors_platform_interface/platform_library.dart'
         MPBadgePosition,
         MPRouteStopIconConfig,
         MPRouteStopIconConfigInterface,
-        MPLabelPosition;
+        MPLabelPosition,
+        MPDirectionsRendererOptions,
+        MPStrokeStyle,
+        MPRouteAnimationType,
+        MPMapboxStyleSource,
+        MPDataSetCachingScope,
+        OnBaseMapCacheProgressListener;
 
 part 'core/mapsindoors_widget.dart';
 part 'core/mp_directions_service.dart';

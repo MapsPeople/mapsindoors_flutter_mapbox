@@ -154,6 +154,8 @@ Future<List<MPLocation>?> getLocations() =>
     MapsindoorsPlatform.instance.getLocations();
 
 /// Runs a query on all the available [MPLocation]s with an optional [MPQuery] and/or [MPFilter]
+///
+/// Selecting one of the returned locations afterwards is reported to MapsIndoors Insights as a search-driven selection (`location_searched`) alongside the plain selection event, but only when the [query] carries search text. A query without it marks nothing, and on Android it also clears the marks left by the previous text search, so the next selection is reported as a plain one. A location the app found by searching its own data outside this call is never reported as search-driven.
 Future<List<MPLocation>?> getLocationsByQuery(
         {MPQuery? query, MPFilter? filter}) =>
     MapsindoorsPlatform.instance.getLocationsByQuery(query, filter);
@@ -200,6 +202,12 @@ Future<bool?> isMapsIndoorsReady() => MapsindoorsPlatform.instance.isReady();
 /// <li>the solution's default language ([MPSolution.defaultLanguage])</li>
 /// <li>the current device language, if the MapsIndoors data isn't available (ie: first app run without network access)</li>
 /// </ul>
+///
+/// [language] must resolve to one of [getMapsIndoorsAvailableLanguages].
+///
+/// It can be changed at any time, before or after [loadMapsIndoors]. Content then reloads asynchronously, so [getLocations] can briefly return stale or empty results afterwards.
+///
+/// The result is Android-only; iOS always resolves to null.
 Future<bool?> setMapsIndoorsLanguage(String language) =>
     MapsindoorsPlatform.instance.setLanguage(language);
 
@@ -229,9 +237,49 @@ Future<MPGeocodeResult?> reverseGeoCode(MPPoint point) =>
     MapsindoorsPlatform.instance.reverseGeoCode(point);
 
 /// Gets the default venue for this solution
+///
+/// This is the venue set as the solution's default in the MapsIndoors CMS. When none is set, the platforms differ: Android returns the solution's first venue, while iOS returns null.
 Future<MPVenue?> getDefaultVenue() =>
     MapsindoorsPlatform.instance.getDefaultVenue();
 
 /// Enables or disables debug logging for the MapsIndoors SDK.
 Future<void> enableMapsIndoorsDebugLogging(bool enable) =>
     MapsindoorsPlatform.instance.enableDebugLogging(enable);
+
+/// Whether the active map provider can cache base-map tiles for offline use.
+///
+/// Returns true on the Mapbox flavour and false on the Google Maps flavour, which has no offline tile store to cache into. When this is false, [enableBaseMapCaching] and [synchronizeBaseMapTiles] both return an [MPError] with code [MPError.baseMapCachingNotSupported] and no tiles are downloaded.
+Future<bool> isBaseMapCachingSupported() =>
+    DataSetCachePlatform.instance.isBaseMapCachingSupported();
+
+/// Enables caching of the map provider's own base-map tiles for the loaded dataset, so the base map underneath MapsIndoors still renders while the device is offline.
+///
+/// Call this after [loadMapsIndoors] and after a [MapsIndoorsWidget] has been built: the dataset is identified by the loaded API key, and the map provider registers the cache implementation when the map view is created. Called earlier, it returns an [MPError] with code [MPError.baseMapCachingNotRegistered].
+///
+/// This only sets the flag. Nothing is downloaded until [synchronizeBaseMapTiles] is called.
+///
+/// [styleSource] must be the Mapbox style the live map renders, because caching one style while displaying another fails silently and only shows up as a blank base map when the device goes offline. It is read on Android only. On iOS the SDK caches the style the map is set up to render, including one set with [MapsIndoorsWidget.mapStyleUri], so [styleSource] is ignored there and the same call works on both platforms.
+///
+/// [scope] governs how much MapsIndoors *content* is cached, and applies only when the dataset is not already being managed - which it usually is, because [loadMapsIndoors] registers it. It has no effect on which base-map tiles are downloaded.
+///
+/// Returns null on success, otherwise an [MPError].
+Future<MPError?> enableBaseMapCaching(
+        {MPMapboxStyleSource styleSource =
+            const MPMapboxStyleSource.mapsIndoorsDefault(),
+        MPDataSetCachingScope scope = MPDataSetCachingScope.full}) =>
+    DataSetCachePlatform.instance.enableBaseMapCaching(styleSource, scope);
+
+/// Downloads the base-map tiles for every dataset that [enableBaseMapCaching] has been called for, one region per venue.
+///
+/// The dataset's venues must already be on the device, which [loadMapsIndoors] takes care of for the loaded solution. A download covers a whole venue and can take several minutes; calling this again for an already-cached dataset refreshes it rather than duplicating it.
+///
+/// [onProgress] reports a fraction from 0.0 to 1.0 while the download runs, ending at 1.0 on success. It is never invoked on the Google Maps flavour. Only one synchronization can run at a time - starting a second before the first completes throws a [StateError].
+///
+/// Update frequency differs by platform: Android reports continuously through the download, while iOS reports once per cached venue region. On a five-venue solution that measured 627 updates on Android against 5 on iOS. The fraction is accurate on both, so a progress bar bound to it is correct either way - just coarser on iOS, where a single-venue solution may report nothing before the final 1.0.
+///
+/// On Android, [destroyMapsIndoors] cancels a download in flight; already-cached tiles are kept.
+///
+/// Returns null once every region has been cached, otherwise an [MPError].
+Future<MPError?> synchronizeBaseMapTiles(
+        {OnBaseMapCacheProgressListener? onProgress}) =>
+    DataSetCachePlatform.instance.synchronizeBaseMapTiles(onProgress);

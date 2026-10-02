@@ -4,7 +4,7 @@ A federated Flutter plugin for integrating with the native MapsIndoors SDK.
 
 | Platform     | Android | iOS   |
 | ------------ | ------- | ----- |
-| **Supports** | SDK 21+ | 14.0+ |
+| **Supports** | SDK 21+ | 16.0+ |
 
 ## Features
 
@@ -21,7 +21,7 @@ This plugin is based on the MapsIndoors V4 SDK for Android and iOS.
 Add MapsIndoors to your `pubspec.yaml`.
 
 ```yaml
-mapsindoors_mapbox: ^4.7.3
+mapsindoors_mapbox: ^4.8.0
 ```
 
 ### Android
@@ -71,10 +71,10 @@ maven {
 
 ### iOS
 
-The MapsIndoors SDK requires iOS 14 so make sure that your podfile is configured for iOS 14. Add use_frameworks! inside your app target as well.
+The MapsIndoors SDK requires iOS 16 so make sure that your podfile is configured for iOS 16. Add use_frameworks! inside your app target as well.
 
 ```
-platform :ios, '14.0'
+platform :ios, '16.0'
 
 target 'MyApp' do
   use_frameworks!
